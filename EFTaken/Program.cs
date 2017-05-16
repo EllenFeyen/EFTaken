@@ -12,32 +12,30 @@ namespace EFTaken
     {
         static void Main(string[] args)
         {
-            try
+            using (var entities = new BankEntities())
             {
-                Console.Write("Klantnr.:");
-                var klantNr = int.Parse(Console.ReadLine());
-
-                using (var entities = new BankEntities())
-                {
-                    var klant = entities.Klanten.Find(klantNr);
-                    if (klant == null)
-                    { Console.WriteLine("Klant niet gevonden"); }
-                    else
-                    {
-                        Console.Write("Geef de juiste voornaam:");
-                        var voornaam = Console.ReadLine();
-                        klant.Voornaam = voornaam;
-                        entities.SaveChanges();
-                    }
-                }
+                var hoogstenInHierarchie = (from personeelslid in entities.Personeel
+                            where personeelslid.ManagerNr == null
+                            select personeelslid).ToList();
+                Afbeelden(hoogstenInHierarchie, 0);
             }
-            catch (DbUpdateConcurrencyException)
-            { Console.WriteLine("Een andere gebruiker wijzigde deze klant"); }
-            catch (FormatException)
-            { Console.WriteLine("Tik een getal"); }
 
             Console.WriteLine("Druk enter om af te sluiten");
             Console.Read();
+        }
+
+        static void Afbeelden(List<Personeelslid> personeel, int insprong)
+        {
+            foreach (var personeelslid in personeel)
+            {
+                Console.Write(new String('\t', insprong));
+                Console.WriteLine(personeelslid.Voornaam);
+                if(personeelslid.Ondergeschikten.Count!=0)
+                {
+                    Afbeelden(personeelslid.Ondergeschikten.ToList(), insprong + 1);
+                }
+            }
+
         }
     }
 }
