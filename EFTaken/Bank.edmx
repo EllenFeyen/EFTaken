@@ -78,14 +78,13 @@
           <Property Name="Voornaam" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" ConcurrencyMode="Fixed" />
           <NavigationProperty Name="Rekeningen" Relationship="Self.FK__Rekeninge__Klant__25869641" FromRole="Klanten" ToRole="Rekeningen" />
         </EntityType>
-        <EntityType Name="Rekening">
+        <EntityType Name="Rekening" Abstract="true">
           <Key>
             <PropertyRef Name="RekeningNr" />
           </Key>
           <Property Name="RekeningNr" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="KlantNr" Type="Int32" Nullable="false" />
           <Property Name="Saldo" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="Soort" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Klant" Relationship="Self.FK__Rekeninge__Klant__25869641" FromRole="Rekeningen" ToRole="Klanten" />
         </EntityType>
         <Association Name="FK__Rekeninge__Klant__25869641">
@@ -135,6 +134,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Zichtrekening" BaseType="BankModel.Rekening">
+          </EntityType>
+        <EntityType Name="Spaarrekening" BaseType="BankModel.Rekening">
+          </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -150,12 +153,23 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Rekeningen">
-            <EntityTypeMapping TypeName="BankModel.Rekening">
+            <EntityTypeMapping TypeName="IsTypeOf(BankModel.Rekening)">
               <MappingFragment StoreEntitySet="Rekeningen">
                 <ScalarProperty Name="RekeningNr" ColumnName="RekeningNr" />
-                <ScalarProperty Name="KlantNr" ColumnName="KlantNr" />
                 <ScalarProperty Name="Saldo" ColumnName="Saldo" />
-                <ScalarProperty Name="Soort" ColumnName="Soort" />
+                <ScalarProperty Name="KlantNr" ColumnName="KlantNr" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="IsTypeOf(BankModel.Zichtrekening)">
+              <MappingFragment StoreEntitySet="Rekeningen">
+                <ScalarProperty Name="RekeningNr" ColumnName="RekeningNr" />
+                <Condition ColumnName="Soort" Value="Z" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="IsTypeOf(BankModel.Spaarrekening)">
+              <MappingFragment StoreEntitySet="Rekeningen">
+                <ScalarProperty Name="RekeningNr" ColumnName="RekeningNr" />
+                <Condition ColumnName="Soort" Value="S" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

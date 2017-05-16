@@ -14,17 +14,20 @@ namespace EFTaken
         {
             using (var entities = new BankEntities())
             {
-                var hoogstenInHierarchie = (from personeelslid in entities.Personeel
-                            where personeelslid.ManagerNr == null
-                            select personeelslid).ToList();
-                Afbeelden(hoogstenInHierarchie, 0);
+                var query = from rekening in entities.Rekeningen
+                            where rekening is Zichtrekening
+                            select rekening;
+                foreach (var zichtrekening in query)
+                {
+                    Console.WriteLine("{0} : {1}", zichtrekening.RekeningNr, zichtrekening.Saldo);
+                }
             }
 
             Console.WriteLine("Druk enter om af te sluiten");
             Console.Read();
         }
 
-        static void Afbeelden(List<Personeelslid> personeel, int insprong)
+        static void AfbeeldenVolgensHierarchie(List<Personeelslid> personeel, int insprong)
         {
             foreach (var personeelslid in personeel)
             {
@@ -32,7 +35,7 @@ namespace EFTaken
                 Console.WriteLine(personeelslid.Voornaam);
                 if(personeelslid.Ondergeschikten.Count!=0)
                 {
-                    Afbeelden(personeelslid.Ondergeschikten.ToList(), insprong + 1);
+                    AfbeeldenVolgensHierarchie(personeelslid.Ondergeschikten.ToList(), insprong + 1);
                 }
             }
 

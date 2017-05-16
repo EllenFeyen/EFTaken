@@ -83,6 +83,12 @@
     </Compile>
     <Compile Include="RekeningUitbreiding.cs" />
     <Compile Include="SaldoOntoereikendException.cs" />
+    <Compile Include="Spaarrekening.cs">
+      <DependentUpon>Bank.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Zichtrekening.cs">
+      <DependentUpon>Bank.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
