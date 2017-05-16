@@ -14,12 +14,12 @@ namespace EFTaken
         {
             using (var entities = new BankEntities())
             {
-                var query = from rekening in entities.Rekeningen
-                            where rekening is Zichtrekening
-                            select rekening;
-                foreach (var zichtrekening in query)
+                var query = from totaleSaldoPerKlant in entities.TotaleSaldosPerKlant
+                            orderby totaleSaldoPerKlant.Voornaam
+                            select totaleSaldoPerKlant;
+                foreach (var totalesaldoperklant in query)
                 {
-                    Console.WriteLine("{0} : {1}", zichtrekening.RekeningNr, zichtrekening.Saldo);
+                    Console.WriteLine("{0} : {1}", totalesaldoperklant.Voornaam, totalesaldoperklant.TotaleSaldo);
                 }
             }
 
@@ -33,7 +33,7 @@ namespace EFTaken
             {
                 Console.Write(new String('\t', insprong));
                 Console.WriteLine(personeelslid.Voornaam);
-                if(personeelslid.Ondergeschikten.Count!=0)
+                if (personeelslid.Ondergeschikten.Count != 0)
                 {
                     AfbeeldenVolgensHierarchie(personeelslid.Ondergeschikten.ToList(), insprong + 1);
                 }
