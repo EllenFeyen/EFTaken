@@ -12,15 +12,19 @@ namespace EFTaken
     {
         static void Main(string[] args)
         {
-            using (var entities = new BankEntities())
+            try
             {
-                var query = from totaleSaldoPerKlant in entities.TotaleSaldosPerKlant
-                            orderby totaleSaldoPerKlant.Voornaam
-                            select totaleSaldoPerKlant;
-                foreach (var totalesaldoperklant in query)
+                Console.Write("Kost: ");
+                var kost = decimal.Parse(Console.ReadLine());
+                using (var entities = new BankEntities())
                 {
-                    Console.WriteLine("{0} : {1}", totalesaldoperklant.Voornaam, totalesaldoperklant.TotaleSaldo);
+                    Console.WriteLine("{0} rekeningen aangepast", 
+                        entities.AdministratieveKost(kost));
                 }
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Tik een getal");
             }
 
             Console.WriteLine("Druk enter om af te sluiten");

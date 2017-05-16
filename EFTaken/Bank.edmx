@@ -64,6 +64,9 @@ warning 6002: The table/view 'Bank.dbo.TotaleSaldoPerKlant' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="AdministratieveKost" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Kost" Type="decimal" Mode="In" />
+        </Function>
         <EntityContainer Name="BankModelStoreContainer">
           <EntitySet Name="Klanten" EntityType="Self.Klanten" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Personeel" EntityType="Self.Personeel" Schema="dbo" store:Type="Tables" />
@@ -130,6 +133,9 @@ warning 6002: The table/view 'Bank.dbo.TotaleSaldoPerKlant' does not have a prim
             <End Role="Personeel1" EntitySet="Personeel" />
           </AssociationSet>
           <EntitySet Name="TotaleSaldosPerKlant" EntityType="BankModel.TotaleSaldoPerKlant" />
+          <FunctionImport Name="AdministratieveKost">
+            <Parameter Name="Kost" Mode="In" Type="Decimal" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="Personeelslid">
           <Key>
@@ -219,6 +225,7 @@ warning 6002: The table/view 'Bank.dbo.TotaleSaldoPerKlant' does not have a prim
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="AdministratieveKost" FunctionName="BankModel.Store.AdministratieveKost" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
